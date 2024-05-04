@@ -12,25 +12,36 @@ dirs = [
 ]
 
 
-def noise(x, y, per):
-    def surflet(gridX, gridY):
-        distX, distY = abs(x - gridX), abs(y - gridY)
-        polyX = 1 - 6 * distX**5 + 15 * distX**4 - 10 * distX**3
-        polyY = 1 - 6 * distY**5 + 15 * distY**4 - 10 * distY**3
-        hashed = perm[perm[int(gridX) % per] + int(gridY) % per]
-        grad = (x - gridX) * dirs[hashed][0] + (y - gridY) * dirs[hashed][1]
-        return polyX * polyY * grad
+def surflet(gridX, gridY, x, y, per):
+    # TODO: Understsand this function
+    distX, distY = abs(x - gridX), abs(y - gridY)
+    # Easing function
+    polyX = 1 - 6 * distX**5 + 15 * distX**4 - 10 * distX**3
+    polyY = 1 - 6 * distY**5 + 15 * distY**4 - 10 * distY**3
+    print(polyX, polyY)
+    input()
+    hashed = perm[perm[int(gridX) % per] + int(gridY) % per]
+    grad = (x - gridX) * dirs[hashed][0] + (y - gridY) * dirs[hashed][1]
 
+    return polyX * polyY * grad
+
+
+def noise(x, y, per):
     intX, intY = int(x), int(y)
+    # print(intX, intY)
+    # input()
+
     return (
-        surflet(intX + 0, intY + 0)
-        + surflet(intX + 1, intY + 0)
-        + surflet(intX + 0, intY + 1)
-        + surflet(intX + 1, intY + 1)
+        surflet(intX + 0, intY + 0, x, y, per)
+        + surflet(intX + 1, intY + 0, x, y, per)
+        + surflet(intX + 0, intY + 1, x, y, per)
+        + surflet(intX + 1, intY + 1, x, y, per)
     )
 
 
 def calculate_octave_perline_noise(x, y, per, octs):
+    # print(x, y)
+    # input()
     val = 0
     persistence = 0.8
     amplitude = 1
