@@ -47,7 +47,6 @@ By merging results in octaves with different frequencies and amplitudes, you can
 ```python
 def calculate_octave_perline_noise(x, y, period, octs, dirs, perm):
     noise = 0
-    frequency = 2
     # Add noise functions
     for octave in range(octs):
         amplitude = 0.5**octave
