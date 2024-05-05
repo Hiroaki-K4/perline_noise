@@ -5,16 +5,16 @@ import random
 from PIL import Image
 
 
-def calculate_weighted_gradient(gridX, gridY, x, y, period, dirs, perm):
+def calculate_weighted_dot_product(gridX, gridY, x, y, period, dirs, perm):
     distX, distY = abs(x - gridX), abs(y - gridY)
     # The closer the distance between a point and the grid,
     # the greater the weight of that grid.
-    polyX = 1 - 6 * distX**5 + 15 * distX**4 - 10 * distX**3
-    polyY = 1 - 6 * distY**5 + 15 * distY**4 - 10 * distY**3
+    weightX = 1 - 6 * distX**5 + 15 * distX**4 - 10 * distX**3
+    weightY = 1 - 6 * distY**5 + 15 * distY**4 - 10 * distY**3
     hashed = perm[perm[int(gridX) % period] + int(gridY) % period]
-    grad = (x - gridX) * dirs[hashed][0] + (y - gridY) * dirs[hashed][1]
+    dot = (x - gridX) * dirs[hashed][0] + (y - gridY) * dirs[hashed][1]
 
-    return polyX * polyY * grad
+    return weightX * weightY * dot
 
 
 def create_noise(x, y, period, dirs, perm):
@@ -22,10 +22,10 @@ def create_noise(x, y, period, dirs, perm):
     intY = int(y)
 
     return (
-        calculate_weighted_gradient(intX + 0, intY + 0, x, y, period, dirs, perm)
-        + calculate_weighted_gradient(intX + 1, intY + 0, x, y, period, dirs, perm)
-        + calculate_weighted_gradient(intX + 0, intY + 1, x, y, period, dirs, perm)
-        + calculate_weighted_gradient(intX + 1, intY + 1, x, y, period, dirs, perm)
+        calculate_weighted_dot_product(intX + 0, intY + 0, x, y, period, dirs, perm)
+        + calculate_weighted_dot_product(intX + 1, intY + 0, x, y, period, dirs, perm)
+        + calculate_weighted_dot_product(intX + 0, intY + 1, x, y, period, dirs, perm)
+        + calculate_weighted_dot_product(intX + 1, intY + 1, x, y, period, dirs, perm)
     )
 
 
@@ -70,7 +70,7 @@ def main(size, freq, octs, random_seed):
     data = create_perline_noise(size, freq, octs, random_seed)
     im = Image.new("L", (size, size))
     im.putdata(data, size, size)
-    im.save("perline_noise.png")
+    im.save("images/perline_noise.png")
 
 
 if __name__ == "__main__":
