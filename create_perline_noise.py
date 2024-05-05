@@ -1,5 +1,7 @@
-import random
+import argparse
 import math
+import random
+
 from PIL import Image
 
 
@@ -28,23 +30,22 @@ def create_noise(x, y, period, dirs, perm):
 
 
 def calculate_octave_perline_noise(x, y, period, octs, dirs, perm):
-    val = 0
-    persistence = 0.8
-    amplitude = 1
-    frequency = 1
+    noise = 0
+    frequency = 2
     # Add noise functions
     for octave in range(octs):
-        amplitude *= persistence
+        amplitude = 0.5**octave
         frequency = 2**octave
-        val += amplitude * create_noise(
+        noise += amplitude * create_noise(
             x * frequency, y * frequency, period * frequency, dirs, perm
         )
 
-    return val
+    return noise
 
 
-def main():
-    random.seed(314)
+def create_perline_noise(size, freq, octs, seed):
+    if seed:
+        random.seed(314)
     perm = list(range(256))
     random.shuffle(perm)
     perm += perm
@@ -53,9 +54,6 @@ def main():
         for a in range(256)
     ]
 
-    size = 128
-    freq = 1 / 32.0
-    octs = 5
     data = []
     for y in range(size):
         for x in range(size):
@@ -65,12 +63,23 @@ def main():
                 )
             )
 
+    return data
+
+
+def main(size, freq, octs, random_seed):
+    data = create_perline_noise(size, freq, octs, random_seed)
     im = Image.new("L", (size, size))
-    im.putdata(data, 128, 128)
-    print(data)
-    # TODO: Add 3D terrian data
-    im.save("noise.png")
+    im.putdata(data, size, size)
+    im.save("perline_noise.png")
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--size", type=int, default=128, help="Output 3D size")
+    parser.add_argument("--octs", type=int, default=5, help="Octave number")
+    parser.add_argument(
+        "--set_seed", action="store_true", help="Whether to set random seed"
+    )
+    args = parser.parse_args()
+    freq = 1 / 32.0
+    main(args.size, freq, args.octs, args.set_seed)
