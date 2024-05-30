@@ -1,6 +1,9 @@
 # perline_noise
 This repogitory creates various mountains by using [perline noise](https://en.wikipedia.org/wiki/Perlin_noise#:~:text=Perlin%20noise%20is%20a%20type,the%20creation%20of%20image%20textures.). Check out [this article](https://adrianb.io/2014/08/09/perlinnoise.html) to understand perline noise in detail.
 
+## Related article I wrote
+- [Create Random 3D Terrain by Using Perline Noise](https://medium.com/@hirok4/create-random-3d-terrain-by-using-perline-noise-546c6de2a166)
+
 <br></br>
 
 ## Algorithm
